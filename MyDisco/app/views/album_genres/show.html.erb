@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Genre:</strong>
+  <%= @album_genre.genre %>
+</p>
+
+<p>
+  <strong>Album:</strong>
+  <%= @album_genre.album %>
+</p>
+
+<%= link_to 'Edit', edit_album_genre_path(@album_genre) %> |
+<%= link_to 'Back', album_genres_path %>

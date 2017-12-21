@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Album Streams</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Album</th>
+      <th>Stream</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @album_streams.each do |album_stream| %>
+      <tr>
+        <td><%= album_stream.album %></td>
+        <td><%= album_stream.stream %></td>
+        <td><%= link_to 'Show', album_stream %></td>
+        <td><%= link_to 'Edit', edit_album_stream_path(album_stream) %></td>
+        <td><%= link_to 'Destroy', album_stream, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Album Stream', new_album_stream_path %>
