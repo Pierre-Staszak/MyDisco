@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-  resources :album_streams
-  resources :album_artists
-  resources :album_genres
+  devise_for :users
   resources :streams
   resources :stats
   resources :artists
