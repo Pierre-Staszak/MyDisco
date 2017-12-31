@@ -24,7 +24,25 @@ class AlbumsController < ApplicationController
   # POST /albums
   # POST /albums.json
   def create
-    @album = Album.new(album_params)
+    #@album = Album.new(album_params)
+    @discogs = Discogs::Wrapper.new("MyDisco", session[:access_token])
+    search = @discogs.search(album_params[:info], :per_page => 5, :type => :release)
+    item = @discogs.get_release(search.results.first.id.to_s)
+
+    @album = Album.new(name: item.title, year: item.year, cover_url: item.images[0].resource_url)
+
+    for x in item.artists
+      artist = Artist.where(name: x.name).first_or_create
+      artist.update(country: item.country)
+      @album.artists.append(artist)
+    end
+    for y in item.styles
+      @album.genres.append(Genre.where(name: y).first_or_create)
+    end
+
+    @album.streams.append(Stream.find(album_params[:stream_id]))
+
+    puts item.images
 
     respond_to do |format|
       if @album.save
@@ -69,6 +87,6 @@ class AlbumsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def album_params
-      params.require(:album).permit(:name, :year, :artist_known)
+      params.permit(:info, :stream_id)
     end
 end

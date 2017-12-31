@@ -4,12 +4,13 @@ class StreamsController < ApplicationController
   # GET /streams
   # GET /streams.json
   def index
-    @streams = Stream.all
+    @streams = Stream.where(user_id: current_user.id)
   end
 
   # GET /streams/1
   # GET /streams/1.json
   def show
+    @discogs = Discogs::Wrapper.new("MyDisco", session[:access_token])
   end
 
   # GET /streams/new
@@ -25,6 +26,7 @@ class StreamsController < ApplicationController
   # POST /streams.json
   def create
     @stream = Stream.new(stream_params)
+    @stream.user_id = current_user.id
 
     respond_to do |format|
       if @stream.save

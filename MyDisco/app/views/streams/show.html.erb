@@ -3,5 +3,33 @@
   <%= @stream.name %>
 </p>
 
+<% if @discogs.authenticated? %>
+  <ul>
+    <%= form_tag("/albums", method: "post") do %>
+      <%= label_tag(:info, "artist + name : ") %>
+      <%= text_field_tag(:info) %>
+      <%= hidden_field_tag 'stream_id', @stream.id %>
+      <%= submit_tag("Add album") %>
+    <% end %>
+  </ul>
+<% else %>
+  <a href="/discogs_wrapper/authenticate">Authenticate Discogs.com account</a>
+<% end %>
+
+<tbody>
+<% @stream.albums.each do |album| %>
+  <tr>
+    <p>
+    <td><%= album.artists.first.name %> : <%= album.name %> </td>
+    <td>
+    <% if album.cover_url.present? %>
+    <%= image_tag album.cover_url %>
+      <% end %>
+    </td>
+    </p>
+  </tr>
+<% end %>
+</tbody>
+
 <%= link_to 'Edit', edit_stream_path(@stream) %> |
 <%= link_to 'Back', streams_path %>
