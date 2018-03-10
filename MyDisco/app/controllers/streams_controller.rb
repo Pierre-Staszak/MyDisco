@@ -4,13 +4,12 @@ class StreamsController < ApplicationController
   # GET /streams
   # GET /streams.json
   def index
-    @streams = Stream.where(user_id: current_user.id)
+    @streams = Stream.where(user_id: current_user.id).order!('created_at DESC')
   end
 
   # GET /streams/1
   # GET /streams/1.json
   def show
-    @discogs = Discogs::Wrapper.new("MyDisco", session[:access_token])
   end
 
   # GET /streams/new

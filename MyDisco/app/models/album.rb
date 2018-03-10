@@ -1,5 +1,10 @@
 class Album < ApplicationRecord
   before_create :clean_name
+  before_destroy do
+    self.genres.clear
+    self.artists.clear
+    self.streams.clear
+  end
 
   private
   def clean_name

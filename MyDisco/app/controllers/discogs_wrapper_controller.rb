@@ -4,12 +4,18 @@ class DiscogsWrapperController < ApplicationController
   end
 
   def index
-    @lol = session[:access_token]
+  end
+
+  def search
+    search = @discogs.search(album_params[:info], :per_page => 5, :type => :release)
+    item = @discogs.get_release(search.results.first.id.to_s)
+
+    puts "OKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
   end
 
   def authenticate
-    app_key      = "GpIOJWOnikcUNrVUXLpD"
-    app_secret   = "KGyrjrFYxVeTdAjTxuznUSwcDlpYGHOi"
+    app_key      = "rVyORXFhwsqXdqpCHfcT"
+    app_secret   = "dMEGVwqrhrCZMhJdMMrAiwhoRpJZsaoH"
     request_data = @discogs.get_request_token(app_key, app_secret,
                                               "http://127.0.0.1:3000/discogs_wrapper/callback")
 
@@ -26,7 +32,7 @@ class DiscogsWrapperController < ApplicationController
     session[:request_token] = nil
     session[:access_token]  = access_token
 
-    redirect_to :action => "index"
+    redirect_to :streams
   end
 
   def show

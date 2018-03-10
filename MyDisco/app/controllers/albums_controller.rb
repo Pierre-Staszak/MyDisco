@@ -5,6 +5,7 @@ class AlbumsController < ApplicationController
   # GET /albums.json
   def index
     @albums = Album.all
+    @streams = Stream.all
   end
 
   # GET /albums/1
@@ -25,7 +26,6 @@ class AlbumsController < ApplicationController
   # POST /albums.json
   def create
     #@album = Album.new(album_params)
-    @discogs = Discogs::Wrapper.new("MyDisco", session[:access_token])
     search = @discogs.search(album_params[:info], :per_page => 5, :type => :release)
     item = @discogs.get_release(search.results.first.id.to_s)
 
@@ -42,14 +42,12 @@ class AlbumsController < ApplicationController
 
     @album.streams.append(Stream.find(album_params[:stream_id]))
 
-    puts item.images
-
     respond_to do |format|
       if @album.save
-        format.html { redirect_to @album, notice: 'Album was successfully created.' }
+        format.html { redirect_to Stream.find(album_params[:stream_id]), notice: 'Album was successfully created.' }
         format.json { render :show, status: :created, location: @album }
       else
-        format.html { render :new }
+        format.html { redirect_to streams_url, notice: 'error : Album not found' }
         format.json { render json: @album.errors, status: :unprocessable_entity }
       end
     end

@@ -57,8 +57,6 @@ ActiveRecord::Schema.define(version: 20171229211632) do
   end
 
   create_table "discogs_wrappers", force: :cascade do |t|
-    t.integer "user_id"
-    t.index ["user_id"], name: "index_discogs_wrappers_on_user_id"
   end
 
   create_table "genres", force: :cascade do |t|
