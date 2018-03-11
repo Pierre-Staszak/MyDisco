@@ -44,17 +44,17 @@ class Album < ApplicationRecord
 
   def set_artists
     @album.artists&.each do |artist|
-      self.artists.where(name: artist.name).first_or_create
+      self.artists << Artist.where(name: artist.name).first_or_create
     end
   end
 
   def set_genres
     @album.styles&.each do |style|
-      self.genres.where(name: style).first_or_create
+      self.genres << Genre.where(name: style).first_or_create
     end
   end
 
   def set_streams
-    self.streams.where(id: album_params[:stream_id]).first
+    self.streams << Stream.find_by_id(album_params[:stream_id])
   end
 end
