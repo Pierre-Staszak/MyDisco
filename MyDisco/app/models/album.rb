@@ -1,22 +1,65 @@
 class Album < ApplicationRecord
-  before_create :clean_name
+  attr_accessor :album_params
+  attr_accessor :discogs
+
   before_destroy do
     self.genres.clear
     self.artists.clear
     self.streams.clear
   end
 
-  private
-  def clean_name
-    self.name = self.name.split.map(&:capitalize).join(' ')
-  end
+  before_save :find_album_on_discogs
+  before_save :set_name, unless: Proc.new { @album.nil? }
+  before_save :set_year, unless: Proc.new { @album.nil? }
+  before_save :set_cover_url, unless: Proc.new { @album.nil? }
+  before_save :set_artists, unless: Proc.new { @album.nil? }
+  before_save :set_genres, unless: Proc.new { @album.nil? }
+  before_save :set_streams, unless: Proc.new { @album.nil? }
 
   has_many :album_genres
-  has_many :genres, through: :album_genres
-
+  has_many :genres, through: :album_genres, dependent: :destroy
   has_many :album_artists
-  has_many :artists, through: :album_artists
-
+  has_many :artists, through: :album_artists, dependent: :destroy
   has_many :album_streams
-  has_many :streams, through: :album_streams
+  has_many :streams, through: :album_streams, dependent: :destroy
+
+  private
+
+  def find_album_on_discogs
+    discogs_albums = discogs.search(album_params[:info], per_page: 5, type: :release).results
+
+    if discogs_albums.first.nil?
+      errors.add(:global, "can't find album on discogs")
+    else
+      @album = discogs.get_release(discogs_albums.first.id)
+    end
+  end
+
+  def set_name
+    self.name = @album.title.split.map(&:capitalize).join(' ')
+  end
+
+  def set_year
+    self.year = @album.year
+  end
+
+  def set_cover_url
+    self.cover_url = @album.images.first&.resource_url
+  end
+
+  def set_artists
+    @album.artists.each do |artist|
+      self.artists.where(name: artist.name).first_or_create
+    end
+  end
+
+  def set_genres
+    @album.styles.each do |style|
+      self.genres.where(name: style).first_or_create
+    end
+  end
+
+  def set_streams
+    self.streams.where(id: album_params[:stream_id]).first
+  end
 end

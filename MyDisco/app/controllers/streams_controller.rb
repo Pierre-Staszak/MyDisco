@@ -4,7 +4,7 @@ class StreamsController < ApplicationController
   # GET /streams
   # GET /streams.json
   def index
-    @streams = Stream.where(user_id: current_user.id).order!('created_at DESC')
+    @streams = Stream.where(user_id: current_user.id).order!('updated_at DESC')
   end
 
   # GET /streams/1

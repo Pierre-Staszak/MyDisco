@@ -6,6 +6,12 @@ class AlbumsController < ApplicationController
   def index
     @albums = Album.all
     @streams = Stream.all
+
+    genres = Genre.left_joins(:albums).group(:id).order('COUNT(albums.id) DESC')
+    @stats = Hash[]
+    genres.each do |genre|
+      @stats[genre.name] = ((genre.albums.count.to_f / Album.count.to_f) * 100).round
+    end
   end
 
   # GET /albums/1
@@ -25,23 +31,7 @@ class AlbumsController < ApplicationController
   # POST /albums
   # POST /albums.json
   def create
-    #@album = Album.new(album_params)
-    search = @discogs.search(album_params[:info], :per_page => 5, :type => :release)
-    item = @discogs.get_release(search.results.first.id.to_s)
-
-    @album = Album.new(name: item.title, year: item.year, cover_url: item.images[0].resource_url)
-
-    for x in item.artists
-      artist = Artist.where(name: x.name).first_or_create
-      artist.update(country: item.country)
-      @album.artists.append(artist)
-    end
-    for y in item.styles
-      @album.genres.append(Genre.where(name: y).first_or_create)
-    end
-
-    @album.streams.append(Stream.find(album_params[:stream_id]))
-
+    @album = Album.new(:album_params => album_params, :discogs => @discogs)
     respond_to do |format|
       if @album.save
         format.html { redirect_to Stream.find(album_params[:stream_id]), notice: 'Album was successfully created.' }

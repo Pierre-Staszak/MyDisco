@@ -11,7 +11,6 @@ Rails.application.routes.draw do
       get :authenticate
       get :callback
       get :try
-      get :search
     end
   end
 

@@ -60,6 +60,9 @@
 
 <div class="pageContent">
   <div class="pageTitleContainer">
+    <% @stats.each do |stat| %>
+      <h3><%= stat[1] %>%  <%= stat[0] %></h3>
+    <% end %>
     <h1 class="pageTitleLabel">My Albums</h1>
   </div>
 
