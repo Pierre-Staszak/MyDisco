@@ -7,8 +7,8 @@ class DiscogsWrapperController < ApplicationController
   end
 
   def authenticate
-    app_key      = "grEATmxmCSaTPXVYInjr"
-    app_secret   = "iWHpNjUnIfshidJwzcIVAxPnIxpPTMgU"
+    app_key      = ""
+    app_secret   = ""
     request_data = @discogs.get_request_token(app_key, app_secret,
                                               "http://127.0.0.1:3000/discogs_wrapper/callback")
 

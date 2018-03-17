@@ -10,7 +10,7 @@ class AlbumsController < ApplicationController
     genres = Genre.left_joins(:albums).group(:id).order('COUNT(albums.id) DESC')
     @stats = Hash[]
     genres.each do |genre|
-      @stats[genre.name] = ((genre.albums.count.to_f / Album.count.to_f) * 100).round
+      @stats[genre.name] = ((genre.albums.count.to_f / Album.count.to_f) * 100).ceil if genre.albums.count != 0
     end
   end
 

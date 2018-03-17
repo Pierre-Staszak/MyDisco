@@ -2,13 +2,6 @@ class Album < ApplicationRecord
   attr_accessor :album_params
   attr_accessor :discogs
 
-  before_create :set_name, unless: Proc.new { @album.nil? }
-  before_create :set_year, unless: Proc.new { @album.nil? }
-  before_create :set_cover_url, unless: Proc.new { @album.nil? }
-  before_create :set_artists, unless: Proc.new { @album.nil? }
-  before_create :set_genres, unless: Proc.new { @album.nil? }
-  before_create :set_streams, unless: Proc.new { @album.nil? }
-
   has_many :album_genres
   has_many :genres, through: :album_genres, dependent: :destroy
   has_many :album_artists
@@ -17,6 +10,13 @@ class Album < ApplicationRecord
   has_many :streams, through: :album_streams, dependent: :destroy
 
   validate :album_is_present_on_discogs
+
+  before_create :set_name, unless: Proc.new { @album.nil? }
+  before_create :set_year, unless: Proc.new { @album.nil? }
+  before_create :set_cover_url, unless: Proc.new { @album.nil? }
+  after_create :set_artists, unless: Proc.new { @album.nil? }
+  after_create :set_genres, unless: Proc.new { @album.nil? }
+  after_create :set_streams, unless: Proc.new { @album.nil? }
 
   private
 

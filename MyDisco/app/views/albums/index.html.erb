@@ -31,7 +31,7 @@
 
 <div class="sidebar">
   <%= link_to streams_path, class:"mydiscoLogo-link" do %>
-    <img src="assets/mydisco_logo.svg" alt="MyDisco Logo" class="mydiscoLogoImg">
+    <%= image_tag 'mydisco_logo', class: "mydiscoLogoImg" %>
   <% end %>
 
   <div class="sidebarMenuContainer">
@@ -63,6 +63,7 @@
     <% @stats.each do |stat| %>
       <h3><%= stat[1] %>%  <%= stat[0] %></h3>
     <% end %>
+    <br>
     <h1 class="pageTitleLabel">My Albums</h1>
   </div>
 
