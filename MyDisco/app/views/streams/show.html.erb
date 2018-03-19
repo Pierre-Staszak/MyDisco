@@ -23,6 +23,7 @@
           <%= submit_tag 'Add Album', class: "addAlbumBtn" %>
         <% end %>
       </div>
+      <br>
     <% else %>
       <a href="/discogs_wrapper/authenticate" class="authenticateDiscogs" type="button">Authenticate Discogs.com account</a>
     <% end %>
@@ -60,21 +61,14 @@
 
 <div class="pageContent">
   <div class="pageTitleContainer">
-    <h1 class="pageTitleLabel"><%= @stream.name %>></h1>
+    <h1 class="pageTitleLabel"><%= @stream.name %></h1>
     <br>
     <% @stats.each do |stat| %>
       <h3><%= stat[1] %>%  <%= stat[0] %></h3>
     <% end %>
     <br>
-    <h1 class="pageTitleLabel">My Albums</h1>
   </div>
-
     <div class="streamContainer">
-      <div class="streamDetails">
-        <h4 class="streamCreationDate"><%= @stream.created_at.strftime("%d - %m - %Y") %></h4>
-        <div class="streamDetailsSeparator"></div>
-        <h4 class="streamAlbumNumber"><%= @stream.albums.count %> Albums</h4>
-      </div>
       <div class="AlbumGridContainer">
         <% @stream.albums.order!('created_at DESC').each do |album| %>
           <%= link_to album, class:"gridCell Cell1" do %>

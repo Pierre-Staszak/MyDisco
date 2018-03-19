@@ -64,14 +64,8 @@
   </div>
 
   <div class="streamFilterContainer">
-    <h2 class="streamFilterLabel">Filter</h2>
     <div class="streamFilterSubContainer">
-      <input class="searchStreamInput" type="search" name="Stream name" placeholder="Stream name">
-      <h3 class="streamSortingLabel">Sort by :</h3>
-      <a href="" class="streamSortingByDate">Creation date <span class="dateSortingArrowUp">▲</span> <span class="dateSortingarrowDown">▼</span>
-      </a>
-      <a href="" class="streamSortingByNumber">Number of albums <span class="numberSortingArrowUp">▲</span> <span class="numberSortingarrowDown">▼</span>
-      </a>
+      <%= render 'form', stream: Stream.new %>
     </div>
   </div>
 

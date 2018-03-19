@@ -10,7 +10,9 @@ class StreamsController < ApplicationController
   # GET /streams/1
   # GET /streams/1.json
   def show
-    genres = Genre.left_joins(:albums).group(:id).order('COUNT(albums.id) DESC')
+    @streams_choices = Stream.where.not(id: params[:id])
+
+    genres = Genre.joins(:albums => :streams).group(:id).where("streams.name = ?", @stream.name).order('COUNT(albums.id) DESC')
     @stats = Hash[]
     genres.each do |genre|
       @stats[genre.name] = ((genre.albums.count.to_f / Album.count.to_f) * 100).ceil if genre.albums.count != 0
@@ -77,4 +79,10 @@ class StreamsController < ApplicationController
     def stream_params
       params.require(:stream).permit(:name)
     end
+
+  def add_albums_from_another_stream
+    puts "LOOOOOOOOOOL"
+    other = Stream.find(params[:id])
+    self.albums = (self.albums + other.albums).uniq
+  end
 end
